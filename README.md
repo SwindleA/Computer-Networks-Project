@@ -34,3 +34,9 @@ First, go into the chat-app folder:
     * https://angular.dev/overview
 * This website has good UI components that we can use:
     * https://material.angular.io/components/categories
+ 
+* Components:
+     * components are generally a different web page in the website. Use the default app.component.html componnent for the UI elements that are always present, all other webpages will be children of the app.component.
+     * To generate a component: https://angular.dev/cli/generate/component
+     * Documentation:https://angular.dev/guide/components
+  
