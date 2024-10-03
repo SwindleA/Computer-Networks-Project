@@ -39,4 +39,9 @@ First, go into the chat-app folder:
      * components are generally a different web page in the website. Use the default app.component.html componnent for the UI elements that are always present, all other webpages will be children of the app.component.
      * To generate a component: https://angular.dev/cli/generate/component
      * Documentation:https://angular.dev/guide/components
+ 
+  * Routing:
+       * app.routing is the file where the routing of the website will go, i.e. what url will take you to what webpage.
+       * I think this is the documentation: https://angular.dev/guide/ngmodules/lazy-loading#create-a-feature-module-with-routing
+         
   
