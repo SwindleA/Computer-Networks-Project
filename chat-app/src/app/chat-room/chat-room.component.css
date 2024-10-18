@@ -1,0 +1,33 @@
+.main-chat-div{
+    margin-left: 30%;
+    /* margin-bottom: 10%; */
+    background-color: aqua;
+    width: 50%;
+    height: 80%;
+}
+
+.header{
+    font-weight: bold;
+}
+
+.messages{
+    overflow-x: scroll;
+    background-color: cadetblue;
+}
+.user-cell{
+    width: 25%;
+}
+
+.chat-form{
+    position: absolute;
+    bottom: 0;
+    background-color: blue;
+    width: 50%;
+}
+.chat-form-field{
+
+    width : 70%;
+    
+}
+.send-button{
+}

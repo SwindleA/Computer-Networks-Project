@@ -1,0 +1,33 @@
+[
+  {
+    "chat_id": 123,
+    "users_in_chat": [
+      1,
+      2
+    ],
+    "messages": [
+      {
+        "user": {
+          "id": 2,
+          "name": "User 2",
+          "chats": [
+            123
+          ]
+        },
+        "message": "Hello There",
+        "time": "2024-10-18T00:55:26.953Z"
+      },
+      {
+        "user": {
+          "id": 1,
+          "name": "User 1",
+          "chats": [
+            123
+          ]
+        },
+        "message": "General Kenobi",
+        "time": "2024-10-18T00:55:39.424Z"
+      }
+    ]
+  }
+]
