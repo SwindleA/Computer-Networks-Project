@@ -1,0 +1,24 @@
+name: Test workflow
+
+run-name: Testing workflow
+
+
+
+on: [push]
+
+jobs:
+  trail-ubuntu-run:
+    runs-on: ubuntu-latest
+    
+    steps:
+    #clone the github to the runner system
+      - uses: actions/checkout@v4
+
+      # running python command to see instalation version
+      - name: Display variable
+        run:  echo ${{ variables.PROJECTNAME }}
+
+      - name: Display secrets
+        run: echo ${{secrets.TEST_SECRET}}
+      
+       
