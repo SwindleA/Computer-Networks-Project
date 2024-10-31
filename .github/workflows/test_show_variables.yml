@@ -16,7 +16,7 @@ jobs:
 
       # running python command to see instalation version
       - name: Display variable
-        run:  echo "${{PROJECTNAME}}"
+        run:  echo "${{vars.PROJECTNAME}}"
 
       - name: Display secrets
         run: echo "${{secrets.TEST_SECRET}}"
