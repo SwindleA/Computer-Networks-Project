@@ -34,6 +34,14 @@ namespace api_server
                 app.UseSwaggerUI();
             }
 
+            //https://learn.microsoft.com/en-us/aspnet/core/fundamentals/websockets?view=aspnetcore-8.0
+            var webSocketOptions = new WebSocketOptions
+            {
+                KeepAliveInterval = TimeSpan.FromMinutes(2)
+            };
+
+            app.UseWebSockets(webSocketOptions);
+
             app.UseHttpsRedirection();
         
 
@@ -42,8 +50,6 @@ namespace api_server
             app.UseAuthorization();
 
             app.MapControllers();
-
-            Console.WriteLine("Here P");
 
             app.Run();
 

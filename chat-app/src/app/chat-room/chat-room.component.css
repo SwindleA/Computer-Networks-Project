@@ -6,16 +6,40 @@
     height: 80%;
 }
 
+
+
 .header{
+    width: 100%;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.header-cell{
+    color: black;
     font-weight: bold;
+    border-bottom: 5pt solid;
 }
 
 .messages{
     overflow-x: scroll;
     background-color: cadetblue;
+    height: 100%;
+    
 }
 .user-cell{
     width: 25%;
+    color: black;
+}
+
+.message-cell{
+    width: 25%;
+    color: black;
+}
+
+.time-cell{
+    width: 25%;
+    color: black;
 }
 
 .chat-form{

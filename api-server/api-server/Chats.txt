@@ -8,14 +8,14 @@
     "messages": [
       {
         "user": {
-          "id": 2,
-          "name": "User 2",
+          "id": 1,
+          "name": "User 1",
           "chats": [
             123
           ]
         },
-        "message": "Hello There",
-        "time": "2024-10-18T00:55:26.953Z"
+        "message": "Hey",
+        "time": "2024-10-31T15:56:56.748Z"
       },
       {
         "user": {
@@ -25,8 +25,228 @@
             123
           ]
         },
-        "message": "General Kenobi",
-        "time": "2024-10-18T00:55:39.424Z"
+        "message": "how are you",
+        "time": "2024-10-31T15:57:01.711Z"
+      },
+      {
+        "user": {
+          "id": 2,
+          "name": "User 2",
+          "chats": [
+            123
+          ]
+        },
+        "message": "good how are you?",
+        "time": "2024-10-31T16:00:37.833Z"
+      },
+      {
+        "user": {
+          "id": 1,
+          "name": "User 1",
+          "chats": [
+            123
+          ]
+        },
+        "message": "good",
+        "time": "2024-10-31T16:00:44.453Z"
+      },
+      {
+        "user": {
+          "id": 1,
+          "name": "User 1",
+          "chats": [
+            123
+          ]
+        },
+        "message": "well",
+        "time": "2024-10-31T16:12:18.794Z"
+      },
+      {
+        "user": {
+          "id": 1,
+          "name": "User 1",
+          "chats": [
+            123
+          ]
+        },
+        "message": "well",
+        "time": "2024-10-31T16:13:07.327Z"
+      },
+      {
+        "user": {
+          "id": 2,
+          "name": "User 2",
+          "chats": [
+            123
+          ]
+        },
+        "message": "what",
+        "time": "2024-10-31T16:13:14.28Z"
+      },
+      {
+        "user": {
+          "id": 2,
+          "name": "User 2",
+          "chats": [
+            123
+          ]
+        },
+        "message": "well",
+        "time": "2024-10-31T16:18:22.532Z"
+      },
+      {
+        "user": {
+          "id": 2,
+          "name": "User 2",
+          "chats": [
+            123
+          ]
+        },
+        "message": "weirdo",
+        "time": "2024-10-31T16:18:30.267Z"
+      },
+      {
+        "user": {
+          "id": 2,
+          "name": "User 2",
+          "chats": [
+            123
+          ]
+        },
+        "message": "what are you doing",
+        "time": "2024-10-31T16:18:34.345Z"
+      },
+      {
+        "user": {
+          "id": 1,
+          "name": "User 1",
+          "chats": [
+            123
+          ]
+        },
+        "message": "nothing, you?",
+        "time": "2024-10-31T16:18:42.962Z"
+      },
+      {
+        "user": {
+          "id": 1,
+          "name": "User 1",
+          "chats": [
+            123
+          ]
+        },
+        "message": "What time is it?",
+        "time": "2024-10-31T16:19:08.565Z"
+      },
+      {
+        "user": {
+          "id": 2,
+          "name": "User 2",
+          "chats": [
+            123
+          ]
+        },
+        "message": "idk",
+        "time": "2024-10-31T16:19:14.239Z"
+      },
+      {
+        "user": {
+          "id": 1,
+          "name": "User 1",
+          "chats": [
+            123
+          ]
+        },
+        "message": "heyllo",
+        "time": "2024-10-31T17:14:24.783Z"
+      },
+      {
+        "user": {
+          "id": 2,
+          "name": "User 2",
+          "chats": [
+            123
+          ]
+        },
+        "message": "hey",
+        "time": "2024-10-31T17:14:30.252Z"
+      },
+      {
+        "user": {
+          "id": 2,
+          "name": "User 2",
+          "chats": [
+            123
+          ]
+        },
+        "message": "hewy",
+        "time": "2024-10-31T18:41:42.067Z"
+      },
+      {
+        "user": {
+          "id": 1,
+          "name": "User 1",
+          "chats": [
+            123
+          ]
+        },
+        "message": "cheese",
+        "time": "2024-10-31T18:41:59.327Z"
+      },
+      {
+        "user": {
+          "id": 1,
+          "name": "User 1",
+          "chats": [
+            123
+          ]
+        },
+        "message": "bacon",
+        "time": "2024-10-31T18:42:03.456Z"
+      },
+      {
+        "user": {
+          "id": 1,
+          "name": "User 1",
+          "chats": [
+            123
+          ]
+        },
+        "message": "hey",
+        "time": "2024-10-31T21:07:05.524Z"
+      },
+      {
+        "user": {
+          "id": 1,
+          "name": "User 1",
+          "chats": [
+            123
+          ]
+        },
+        "message": "what up",
+        "time": "2024-10-31T21:08:43.716Z"
+      },
+      {
+        "user": {
+          "id": 1,
+          "name": "User 1",
+          "chats": [
+            123
+          ]
+        },
+        "message": "I am doing well. How are you?",
+        "time": "2024-10-31T21:08:55.322Z"
+      },
+      {
+        "user": {
+          "id": 2,
+          "name": "User 2",
+          "chats": [
+            123
+          ]
+        },
+        "message": "what up",
+        "time": "2024-11-05T15:44:00.794Z"
       }
     ]
   }

@@ -1,8 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using api_server.Domain;
-using System;
 using Microsoft.AspNetCore.Authorization;
 using api_server.Data;
+using System.Text.Json;
+using System.Text;
 
 namespace api_server.Controllers
 {
@@ -14,13 +15,12 @@ namespace api_server.Controllers
         
         public HomeController(IConfiguration configuration) 
         {
-            _configuration = configuration;
-
-            
+            _configuration = configuration;          
 
         }
 
 
+        //this is to generate a blank chat with two users for the application to work if you cleared the Chats file.
         [HttpGet("Setup")]
         public IActionResult SetUp()
          {
@@ -81,76 +81,118 @@ namespace api_server.Controllers
             return Ok(value);  // Returns a 200 OK status with the value
         }
 
-        [HttpGet("UpdateChat")]
-        public IActionResult UpdateChat(int id)
-        {
-            Console.WriteLine("update chat watcher started");
 
+        [HttpGet("UpdateChat")]
+        public async Task<string> UpdateChat()
+        {
             bool changed = false;
             List<Chat> chats = FileWriter.ReadChatsFromFile("./Chats.txt").Result;
-            Chat originalChat = chats.FirstOrDefault(chat => chat.chat_id == id);
+            Chat changedChat = null;
 
-            // Specify the path to the file or directory to be watched
-            string filePath = "./Chats.txt";
-            string directoryPath = Path.GetDirectoryName(filePath);
-            string fileName = Path.GetFileName(filePath);
 
-            using (FileSystemWatcher watcher = new FileSystemWatcher())
+            if (HttpContext.WebSockets.IsWebSocketRequest)
             {
-                // Set the directory to watch
-                watcher.Path = directoryPath;
+                Console.WriteLine("update chat watcher started");
+                using var webSocket = await HttpContext.WebSockets.AcceptWebSocketAsync();
 
-                // Watch for changes in LastWrite time, which indicates file modification
-                watcher.NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.FileName;
+                var buffer = new byte[1024 * 4];
 
-                // Filter to only watch the specific file
-                watcher.Filter = fileName;
+                //read the chat id from the socket
+                var receiveResult = await webSocket.ReceiveAsync(
+                    new ArraySegment<byte>(buffer), CancellationToken.None);
 
-                // Register the event handler
-                watcher.Changed += (source, e) =>
+                string string_id = Encoding.UTF8.GetString(buffer).TrimEnd('\0');
+
+                //chat id
+                int id = int.Parse(string_id);
+
+                //get the current existing version of the chat
+                Chat originalChat = chats.FirstOrDefault(chat => chat.chat_id == id);
+
+                //while the connection is established? maybe?
+                while (!receiveResult.CloseStatus.HasValue)
                 {
-                    // This action is triggered when the file is changed
-                    Console.WriteLine($"File '{e.FullPath}' was changed: {e.ChangeType}");
+                    
 
-                    List<Chat> chats = FileWriter.ReadChatsFromFile("./Chats.txt").Result;
-                    Chat changedChat = chats.FirstOrDefault(chat => chat.chat_id == id);
+                    // Specify the path to the file or directory to be watched
+                    string filePath = "./Chats.txt";
+                    string directoryPath = Path.GetDirectoryName(filePath);
+                    string fileName = Path.GetFileName(filePath);
 
-                    if(changedChat != originalChat)
+                    //this watches for any changes made to the Chats file. 
+                    using (FileSystemWatcher watcher = new FileSystemWatcher())
                     {
-                        Console.WriteLine("chat changed");
-                        // Disable the watcher to stop further events
-                        FileSystemWatcher watcherSource = (FileSystemWatcher)source;
-                        watcherSource.EnableRaisingEvents = false;
-                        changed = true;
+                        // Set the directory to watch
+                        watcher.Path = directoryPath;
 
+                        // Watch for changes in LastWrite time, which indicates file modification
+                        watcher.NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.FileName;
+
+                        // Filter to only watch the specific file
+                        watcher.Filter = fileName;
+
+                        // Register the event handler
+                        watcher.Changed += (source, e) =>
+                        {
+                            // This action is triggered when the file is changed
+                            Console.WriteLine($"File '{e.FullPath}' was changed: {e.ChangeType}");
+
+                            List<Chat> chats = FileWriter.ReadChatsFromFile("./Chats.txt").Result;
+                            changedChat = chats.FirstOrDefault(chat => chat.chat_id == id);
+
+                            if (changedChat != originalChat)
+                            {
+                                Console.WriteLine("chat changed");
+                                // Disable the watcher to stop further events when the chat changed is the chat we are listening for
+                                FileSystemWatcher watcherSource = (FileSystemWatcher)source;
+                                watcherSource.EnableRaisingEvents = false;
+                                changed = true;
+
+                            }
+
+                        };
+
+
+                        // Start watching
+                        watcher.EnableRaisingEvents = true;
+
+                        //this loops keeps the watcher running until a change happens to the chat.  
+                        while (!changed);
                     }
+                   
+                    //if the watcher is no longer watching, but the chat to return was never set.
+                    if(changedChat == null) { return "BAD"; }
 
-                };
+                    Console.WriteLine("** Returning updated chat");
+                    
+                    //convert the chat data structure to a byte array
+                    byte[] byteArray = JsonSerializer.SerializeToUtf8Bytes(changedChat);
 
+                    var arraySegment = new ArraySegment<byte>(byteArray);
 
-                // Start watching
-                watcher.EnableRaisingEvents = true;
+                    //write the chat to the socket connection to the user. 
+                    await webSocket.SendAsync(
+                        arraySegment,
+                        receiveResult.MessageType,
+                        receiveResult.EndOfMessage,
+                        CancellationToken.None);
 
-                while (!changed) ;
+                    receiveResult = await webSocket.ReceiveAsync(
+                        new ArraySegment<byte>(buffer), CancellationToken.None);
+                }
+
+                await webSocket.CloseAsync(
+                    receiveResult.CloseStatus.Value,
+                    receiveResult.CloseStatusDescription,
+                    CancellationToken.None);
+            }
+            else
+            {
+                HttpContext.Response.StatusCode = StatusCodes.Status400BadRequest;
             }
 
-            List<Chat> chats2 = FileWriter.ReadChatsFromFile("./Chats.txt").Result;
-            Chat newChat = chats.FirstOrDefault(chat2 => chat2.chat_id == id);
-
-
-            Console.WriteLine("** Returning updated chat");
-            return Ok(newChat);
-
-
+            return "Ok";
         }
-
-        // Event handler when the file is changed or modified
-        private static void OnChanged(object source, FileSystemEventArgs e)
-        {
-            // Specify your action here
-            Console.WriteLine($"File '{e.FullPath}' was changed: {e.ChangeType}");
-        }
-
 
         [HttpPost("SendMessage")]
         public IActionResult SendMessage(Message message,int chat_id)
@@ -174,17 +216,9 @@ namespace api_server.Controllers
             }
 
 
-            return Ok();
+            return StatusCode(500);
             
         }
-
-
-        private void ForwardMessage(Chat targetChat)
-        {
-
-
-        }
-
 
     }
 }

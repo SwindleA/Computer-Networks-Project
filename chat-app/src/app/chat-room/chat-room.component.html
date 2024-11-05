@@ -2,47 +2,49 @@
 
 
 
-
-    <mat-table [dataSource]="dataSource" class="messages">
+    
+    <mat-table [dataSource]="dataSource" id="messages" class="messages">
 
         <!--- Note that these columns can be defined in any order.
-              The actual rendered columns are set as a property on the row definition" -->
-      
+            The actual rendered columns are set as a property on the row definition" -->
+    
         <!-- Position Column -->
         <ng-container matColumnDef="User">
-          <th mat-header-cell *matHeaderCellDef > User </th>
-          <td mat-cell *matCellDef="let element" class="user-cell"> {{element.user.name}} </td>
+        <th mat-header-cell *matHeaderCellDef class="header-cell"> User </th>
+        <td mat-cell *matCellDef="let element" class="user-cell"> {{element.user.name}} </td>
         </ng-container>
-      
+    
 
         <!-- Weight Column -->
         <ng-container matColumnDef="Message">
-          <th mat-header-cell *matHeaderCellDef> Message </th>
-          <td mat-cell *matCellDef="let element"> {{element.message}} </td>
+        <th mat-header-cell *matHeaderCellDef class="header-cell"> Message </th>
+        <td mat-cell *matCellDef="let element"  class="message-cell"> {{element.message}} </td>
         </ng-container>
-      
+    
         <!-- Symbol Column -->
         <ng-container matColumnDef="time">
-          <th mat-header-cell *matHeaderCellDef> time </th>
-          <td mat-cell *matCellDef="let element"> {{element.time}} </td>
+        <th mat-header-cell *matHeaderCellDef class="header-cell"> Time </th>
+        <td mat-cell *matCellDef="let element"  class="time-cell"> {{element.time}} </td>
         </ng-container>
-      
-        <tr mat-header-row *matHeaderRowDef="displayedColumns" class="header"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-      </mat-table>
-      
-<form class="chat-form">
-    <mat-form-field class="chat-form-field">
-        <mat-label>Message</mat-label>
-        <input matInput  placeholder="message" id="chat-input">
-    </mat-form-field>
-
-    <button mat-fab extended class="send-button" (click)="sendMessage()">
-        <mat-icon>send</mat-icon>
-        Send
-    </button>
-</form>   
     
+        <tr mat-header-row *matHeaderRowDef="displayedColumns;" class="header"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </mat-table>
+    
+
+
+    <form class="chat-form">
+        <mat-form-field class="chat-form-field">
+            <mat-label>Message</mat-label>
+            <input matInput  placeholder="message" id="chat-input">
+        </mat-form-field>
+
+        <button mat-fab extended class="send-button" (click)="sendMessage()">
+            <mat-icon>send</mat-icon>
+            Send
+        </button>
+    </form>   
+        
 
     
 

@@ -1,4 +1,4 @@
-import { Component,Injectable } from '@angular/core';
+import { Component,Injectable,ElementRef, ViewChild } from '@angular/core';
 import {MatInputModule} from '@angular/material/input';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {FormControl,FormsModule} from '@angular/forms';
@@ -11,6 +11,8 @@ import { Message } from '../DataStructures/message';
 import { User } from '../DataStructures/user';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute } from '@angular/router';
+
+var socketURL = "https://localhost:7244/api/Home/UpdateChat"
 
 @Component({
   selector: 'app-chat-room',
@@ -32,9 +34,14 @@ export class ChatRoomComponent {
         users_in_chat :[],
         messages : []};
 
-    user : User = {id : 0,name : "", chats : []};
+    user : User = {id : 0,name : "", chats : []}; //{"id": 1, "name": "User 1","chats": [ 123] }//
 
     chatFormControl  = new FormControl('');
+
+    
+
+    constructor(private api : ApiService,private route: ActivatedRoute){}
+
 
     async ngOnInit() {
         
@@ -44,11 +51,6 @@ export class ChatRoomComponent {
         this.getChat();
     
         this.UpdateChat();
-
-    }
-
-    constructor(private api : ApiService,private route: ActivatedRoute){
-
 
     }
 
@@ -63,30 +65,67 @@ export class ChatRoomComponent {
 
         temp.value = "";
 
-        
-
         new_message.time = new Date().toISOString();
 
         await this.api.sendMessage(new_message, this.chat);
-
 
     }
 
     async getChat(){
         var chatId = Number.parseInt(this.route.snapshot.paramMap.get('chatid')??"0");
         this.chat  = await this.api.getChat(chatId);
-        this.displayData = this.chat.messages;//this.chat.messages;
+        this.displayData = this.chat.messages;
         this.dataSource.data = this.displayData;
+        
+        this.scrollChat();
+        
+        
     }
 
     async UpdateChat(){
-        while(true){
-            var chatId = Number.parseInt(this.route.snapshot.paramMap.get('chatid')??"0");
-            this.chat  = await this.api.UpdateChat(chatId);
-            this.displayData = this.chat.messages;//this.chat.messages;
-            this.dataSource.data = this.displayData;
-        }
+        var chatId = Number.parseInt(this.route.snapshot.paramMap.get('chatid')??"0");
         
+            console.log(chatId)
+
+            var socket = new WebSocket(socketURL)
+            socket.onopen = function (event) {
+                console.log("Socket has been opened!");
+                console.log("sending message");
+                socket.send(chatId.toString());
+            };
+
+            
+            socket.onmessage = (event ) =>{
+                
+                console.log(event)
+                this.chat = JSON.parse(event.data);
+                console.log(this.chat)
+                this.displayData = this.chat.messages;
+                this.dataSource.data = this.displayData;
+                this.scrollChat();
+                
+                socket.close()
+            };
+            
+            socket.onclose = (event) =>{
+                console.log("reinitiating the socket connection after close")
+                console.log(event)
+                this.UpdateChat();
+            }
+        
+        
+    }
+
+
+    scrollChat(){
+        console.log("scroll")
+            setTimeout(() => {
+                var objDiv = document.getElementById('messages');
+                console.log(objDiv)
+                if(objDiv){
+                    objDiv.scrollTop = objDiv.scrollHeight;
+                }
+            },0)
     }
 
 }
