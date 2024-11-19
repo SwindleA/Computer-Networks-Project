@@ -16,7 +16,7 @@ namespace api_server.Domain
 
 
         //chats that the user is in
-        public int[] chats { get; set; }
+        public List<int> chats { get; set; }
 
     }
 }

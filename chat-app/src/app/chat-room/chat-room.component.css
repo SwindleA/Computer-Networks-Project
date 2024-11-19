@@ -1,8 +1,8 @@
 .main-chat-div{
-    margin-left: 30%;
+    margin-left: 50%;
     /* margin-bottom: 10%; */
     background-color: aqua;
-    width: 50%;
+    width: 100%;
     height: 80%;
 }
 
@@ -25,6 +25,7 @@
     overflow-x: scroll;
     background-color: cadetblue;
     height: 100%;
+    width: 700px;
     
 }
 .user-cell{

@@ -1,7 +1,25 @@
 
-<header class = "header">
+<!-- <header class = "header">
 
     <h1> {{ title }}</h1>
 
-</header>
-<router-outlet />
+    <button (click)="createNewChat()">Create New Chat</button>
+
+</header> -->
+
+<mat-toolbar>
+   
+    <span>{{ title }}</span>
+    <span class="example-spacer"></span>
+    <button mat-icon-button class="example-icon favorite-icon" (click)="createNewChat()">
+      <mat-icon>create</mat-icon>
+    </button>
+    
+  </mat-toolbar>
+<div class="main-div">
+<app-chat-list [user_id]="user_id"></app-chat-list>
+
+<router-outlet/>
+
+</div>
+

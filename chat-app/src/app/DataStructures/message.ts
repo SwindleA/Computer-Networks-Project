@@ -1,4 +1,3 @@
-import { User } from "./user";
 export interface Message {
-    user : User, message: string, time : string
+    user_id : number, message: string, time : string
 }

@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using api_server.Data;
 using System.Text.Json;
 using System.Text;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace api_server.Controllers
 {
@@ -47,13 +48,12 @@ namespace api_server.Controllers
             FileWriter.WriteToFile("./Users.txt", users);
 
             Chat chat = new Chat();
+            chat.chat_name = "Test Convo";
             chat.chat_id = 123;
-            chat.users_in_chat = [user1.id, user2.id];
+            chat.users_in_chat = [user1, user2];
             chats.Add(chat);
 
             FileWriter.WriteToFile("./Chats.txt", chats);
-
-            Console.WriteLine("Here");
 
             return Ok();
         }
@@ -66,6 +66,18 @@ namespace api_server.Controllers
             Console.WriteLine(value);
             return Ok(value);  // Returns a 200 OK status with the value
         }
+
+
+        [HttpGet("GetAllUsers")]
+        public IActionResult GetAllUsers()
+        {
+            List<User> users = FileWriter.ReadUsersFromFile("./Users.txt").Result;
+            
+            Console.WriteLine(users);
+            return Ok(users);  // Returns a 200 OK status with the value
+        }
+
+
 
         [AllowAnonymous]
         [HttpGet("GetChat")]
@@ -80,6 +92,21 @@ namespace api_server.Controllers
             Console.WriteLine(value);
             return Ok(value);  // Returns a 200 OK status with the value
         }
+
+        //[AllowAnonymous]
+        //[HttpGet("GetChats")]
+        //public IActionResult GetChats(int id)
+        //{
+        //    Console.WriteLine("Get Chats");
+
+        //    var user = GetUser(id) as User;
+
+        //    List<Chat> chats = FileWriter.ReadChatsFromFile("./Chats.txt").Result;
+        //    var value = chats.FindAll(chat => chat.users_in_chat.Contains(user));
+
+        //    Console.WriteLine(value);
+        //    return Ok(value);  // Returns a 200 OK status with the value
+        //}
 
 
         [HttpGet("UpdateChat")]
@@ -219,6 +246,72 @@ namespace api_server.Controllers
             return StatusCode(500);
             
         }
+
+
+        [HttpPost("CreateChat")]
+        public async Task<IActionResult> CreateChat(Chat chat,int id) 
+        {
+            Console.WriteLine("CreateChat");
+            Console.WriteLine(chat);
+
+            //create new chat ID
+            List<Chat> chats = FileWriter.ReadChatsFromFile("./Chats.txt").Result;
+            int new_chat_id = -1;
+            bool id_created = false;
+            while (!id_created)
+            {
+                
+                Random rnd = new Random();
+                new_chat_id = rnd.Next(100, 999);
+
+                
+                Chat targetChat = chats.FirstOrDefault(chat => chat.chat_id == new_chat_id);
+                if (targetChat == null)
+                {
+                    id_created = true;
+                }
+            }
+
+            chat.chat_id = new_chat_id;
+
+            Message intro_message = new Message();
+
+            intro_message.message = "New chat created";
+
+            chat.messages.Add(intro_message);
+
+            //write chat to txt
+            chats.Add(chat);
+
+            FileWriter.WriteToFile("./Chats.txt", chats);
+
+            //add chat to user's chat list
+
+            List<User> users = FileWriter.ReadUsersFromFile("./Users.txt").Result;
+            
+            for(int j =0; j<chat.users_in_chat.Count; j++)
+            {
+                
+
+                for(int i =0; i< users.Count; i++ )
+                {
+                    if (chat.users_in_chat[j].id == users[i].id)
+                    {
+                        int[] updated_chat_array = new int[users[i].chats.Count + 1];
+                        users[i].chats.Add(chat.chat_id);
+                    }
+
+                }
+
+            }
+            
+
+            FileWriter.WriteToFile("./Users.txt", users);
+
+
+            return Ok(chat);
+        }
+
 
     }
 }

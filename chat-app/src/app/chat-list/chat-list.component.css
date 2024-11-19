@@ -1,0 +1,14 @@
+.side-nav-container{
+    margin-left: 0%;
+    /* margin-bottom: 10%; */
+    width: 300px;
+    height: 100%;
+}
+
+mat-sidenav{
+    background-color: blue;
+}
+
+.go-to-button{
+    width: 300px;
+}

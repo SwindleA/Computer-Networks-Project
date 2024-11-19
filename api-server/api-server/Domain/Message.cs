@@ -9,7 +9,7 @@ namespace api_server.Domain
     public class Message
     {   
         //the user that sent the message. 
-        public User user {  get; set; }
+        public int user_id {  get; set; }
 
         //the contents of the message
         public string message { get; set; }

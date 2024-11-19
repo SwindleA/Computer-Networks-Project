@@ -1,5 +1,16 @@
 
+.main-div{
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    width: 100%;
+    height: 100%;
+    background-color: blueviolet;
+}
+
 .header{
+    
+    display: flex;
     margin-top: 30px;
     font-size: 50pt;
     font-weight: bold;
