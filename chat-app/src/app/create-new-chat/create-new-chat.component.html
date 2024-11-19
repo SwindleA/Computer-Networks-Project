@@ -1,0 +1,25 @@
+<div class="main-div">
+
+    <p>Select the users that you desire to be in your new chat room. </p>
+
+    <form [formGroup]="checkboxForm" class="create-chat-form" >
+        
+        <div formArrayName="checkboxes">
+            <label *ngFor="let item of users; let i = index">
+              <input  type="checkbox" [formControlName]="i" />
+              {{ item.name }}
+            </label>
+          </div>
+          <br>
+          <label for="name">Chat Name:</label>
+          <input id="name" formControlName="name" type="text">
+<br>
+<br>
+        <button type="button" mat-fab extended class="send-button"  (click)="createChat()">
+            <mat-icon>send</mat-icon>
+            Create Chat
+        </button>
+    </form>  
+</div>
+
+

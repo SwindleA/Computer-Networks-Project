@@ -4,8 +4,11 @@ import { Message } from './DataStructures/message';
 import { Chat } from './DataStructures/chat';
 
 const url_get_user = "https://localhost:7244/api/Home/GetUser?id="
+const url_get_all_users = "https://localhost:7244/api/Home/GetAllUsers"
 const url_send_message = "https://localhost:7244/api/Home/SendMessage?chat_id="
 const url_get_chat = "https://localhost:7244/api/Home/GetChat?id="
+const url_create_chat = "https://localhost:7244/api/Home/CreateChat?id="
+const url_get_chats = "https://localhost:7244/api/Home/GetChats?id="
 
 @Injectable({
   providedIn: 'root'
@@ -21,6 +24,23 @@ export class ApiService {
 
         try{
             const response = await fetch(url_get_user+id,{
+                headers : new Headers({'content-type' :'application/json'}),
+                mode : 'cors'
+            });
+
+            const data = await response.json()
+            console.log(data) 
+            return data;
+        }catch(error){
+            console.log(error);
+        }
+    }
+
+    async getAllUsers(){
+        console.log("GetAllUsers");
+
+        try{
+            const response = await fetch(url_get_all_users,{
                 headers : new Headers({'content-type' :'application/json'}),
                 mode : 'cors'
             });
@@ -72,5 +92,46 @@ export class ApiService {
         }
 
     }
+
+    public async createChat(chat : Chat, userId : number){
+        
+
+        var pack : string = JSON.stringify(chat)
+
+        console.log(pack)
+        try{
+            const response = await fetch(url_create_chat+userId,{
+                method : 'POST',
+                mode : 'cors',
+                headers : new Headers({'content-type' :'application/json'}),
+                body : pack
+            })
+            const data = await response.json()
+            console.log(data) 
+            return data;
+        }catch(error){
+            console.log(error);
+        }
+
+    }
+
+    public async getChats(user_id : string){
+        console.log("Get chats");
+
+        try{
+            const response = await fetch(url_get_chats+user_id,{
+                headers : new Headers({'content-type' :'application/json'}),
+                mode : 'cors'
+            });
+
+            const data = await response.json()
+            console.log(data) 
+            return data;
+        }catch(error){
+            console.log(error);
+        }
+
+    }
+
 
 }

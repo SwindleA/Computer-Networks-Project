@@ -1,0 +1,17 @@
+.main-div{
+    margin-left: 50%;
+    /* margin-bottom: 10%; */
+    background-color: aqua;
+    width: 600px;
+    height: 80%;
+}
+.create-chat-form{
+    
+    background-color: blue;
+    width: 100%;
+}
+.create-chat-form-field{
+
+    width : 70%;
+    
+}

@@ -1,4 +1,4 @@
-import { Component,Injectable,ElementRef, ViewChild } from '@angular/core';
+import { Component,Injectable,ElementRef, ViewChild, OnInit} from '@angular/core';
 import {MatInputModule} from '@angular/material/input';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {FormControl,FormsModule} from '@angular/forms';
@@ -31,22 +31,24 @@ export class ChatRoomComponent {
 
     chat : Chat = {
         chat_id : 0,
+        chat_name : '',
         users_in_chat :[],
         messages : []};
 
-    user : User = {id : 0,name : "", chats : []}; //{"id": 1, "name": "User 1","chats": [ 123] }//
+    //user : User = {id : 0,name : "", chats : []}; //
 
+    user_id : number = -1;
     chatFormControl  = new FormControl('');
 
-    
+    users_in_chat : Map<number,string> = new Map<number,string>();
 
     constructor(private api : ApiService,private route: ActivatedRoute){}
 
 
     async ngOnInit() {
         
-        var tempID = Number.parseInt(this.route.snapshot.paramMap.get('id')??"0");
-        this.user = await this.api.getUser(tempID);
+        this.user_id = Number.parseInt(this.route.snapshot.paramMap.get('id')??"0");
+        //this.user = await this.api.getUser(tempID);
         
         this.getChat();
     
@@ -59,7 +61,7 @@ export class ChatRoomComponent {
         const temp = document.getElementById('chat-input') as HTMLInputElement;
         console.log(temp.value)
 
-        var new_message : Message = {user: this.user,message : "",time : ""};
+        var new_message : Message = {user_id: this.user_id,message : "",time : ""};
 
         new_message.message = temp.value;
 
@@ -77,6 +79,10 @@ export class ChatRoomComponent {
         this.displayData = this.chat.messages;
         this.dataSource.data = this.displayData;
         
+        this.chat.users_in_chat.forEach(element => {
+            this.users_in_chat.set(element.id,element.name);
+        });
+
         this.scrollChat();
         
         
