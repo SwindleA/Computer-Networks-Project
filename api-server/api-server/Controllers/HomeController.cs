@@ -35,12 +35,11 @@ namespace api_server.Controllers
             User user1 = new User();
             user1.id = 1;
             user1.name = "User 1";
-            user1.chats = [123];
-
+            user1.chats.Add(123, "Test Convo");
             User user2 = new User();
             user2.id = 2;
             user2.name = "User 2";
-            user2.chats = [123];
+            user2.chats.Add(123, "Test Convo");
 
             users.Add(user1);
             users.Add(user2);
@@ -92,21 +91,6 @@ namespace api_server.Controllers
             Console.WriteLine(value);
             return Ok(value);  // Returns a 200 OK status with the value
         }
-
-        //[AllowAnonymous]
-        //[HttpGet("GetChats")]
-        //public IActionResult GetChats(int id)
-        //{
-        //    Console.WriteLine("Get Chats");
-
-        //    var user = GetUser(id) as User;
-
-        //    List<Chat> chats = FileWriter.ReadChatsFromFile("./Chats.txt").Result;
-        //    var value = chats.FindAll(chat => chat.users_in_chat.Contains(user));
-
-        //    Console.WriteLine(value);
-        //    return Ok(value);  // Returns a 200 OK status with the value
-        //}
 
 
         [HttpGet("UpdateChat")]
@@ -298,7 +282,7 @@ namespace api_server.Controllers
                     if (chat.users_in_chat[j].id == users[i].id)
                     {
                         int[] updated_chat_array = new int[users[i].chats.Count + 1];
-                        users[i].chats.Add(chat.chat_id);
+                        users[i].chats.Add(chat.chat_id,chat.chat_name);
                     }
 
                 }
@@ -306,10 +290,60 @@ namespace api_server.Controllers
             }
             
 
-            FileWriter.WriteToFile("./Users.txt", users);
+            await FileWriter.WriteToFile("./Users.txt", users);
 
 
             return Ok(chat);
+        }
+
+        [HttpPost("Login_CreateUser")]
+        public async Task<IActionResult> Login_CreateUser([FromBody] string user_name)
+        {
+            Console.WriteLine("Login_CreateUser");
+            Console.WriteLine(user_name);
+            List<User> users = FileWriter.ReadUsersFromFile("./Users.txt").Result;
+
+            //check if the user exists
+            User existingUser = users.FirstOrDefault(user => user.name.Replace(" ", "").ToLower() == user_name.Replace(" ", "").ToLower());
+            if (existingUser != null)
+            {
+                return Ok(existingUser);
+            }
+
+            //if the user does not exist, then create a new one
+
+            //create user
+            User newUser = new User();
+            newUser.name = user_name;
+            newUser.chats = new Dictionary<int, string>();
+
+            //create new chat ID
+
+            int new_user_id = -1;
+            bool id_created = false;
+            while (!id_created)
+            {
+
+                Random rnd = new Random();
+                new_user_id = rnd.Next(1, 100);
+
+
+                User targetUser = users.FirstOrDefault(user => user.id == new_user_id);
+                if (targetUser == null)
+                {
+                    id_created = true;
+                }
+            }
+
+            newUser.id = new_user_id;
+
+            users.Add(newUser);
+
+
+            await FileWriter.WriteToFile("./Users.txt", users);
+
+
+            return Ok(newUser);
         }
 
 

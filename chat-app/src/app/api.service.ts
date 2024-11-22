@@ -9,6 +9,7 @@ const url_send_message = "https://localhost:7244/api/Home/SendMessage?chat_id="
 const url_get_chat = "https://localhost:7244/api/Home/GetChat?id="
 const url_create_chat = "https://localhost:7244/api/Home/CreateChat?id="
 const url_get_chats = "https://localhost:7244/api/Home/GetChats?id="
+const url_login_create_user = "https://localhost:7244/api/Home/Login_CreateUser?user_name="
 
 @Injectable({
   providedIn: 'root'
@@ -115,13 +116,34 @@ export class ApiService {
 
     }
 
-    public async getChats(user_id : string){
-        console.log("Get chats");
+    // public async getChats(user_id : string){
+    //     console.log("Get chats");
 
+    //     try{
+    //         const response = await fetch(url_get_chats+user_id,{
+    //             headers : new Headers({'content-type' :'application/json'}),
+    //             mode : 'cors'
+    //         });
+
+    //         const data = await response.json()
+    //         console.log(data) 
+    //         return data;
+    //     }catch(error){
+    //         console.log(error);
+    //     }
+
+    // }
+
+    //send the user's name to the api to see if it exists, if so, route the user to the home page. If not, create the user and then route to create chat page
+    public async login_createUser(user_name : string){
+        console.log("login/create user");
+        var pack : string = JSON.stringify(user_name)
         try{
-            const response = await fetch(url_get_chats+user_id,{
+            const response = await fetch(url_login_create_user,{                
+                method : 'POST',
                 headers : new Headers({'content-type' :'application/json'}),
-                mode : 'cors'
+                mode : 'cors',
+                body : pack
             });
 
             const data = await response.json()
@@ -132,6 +154,5 @@ export class ApiService {
         }
 
     }
-
 
 }

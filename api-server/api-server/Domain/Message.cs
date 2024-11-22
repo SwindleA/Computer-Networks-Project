@@ -15,6 +15,8 @@ namespace api_server.Domain
         public string message { get; set; }
 
         //time that message was sent
-        public DateTime time { get; set; }
+        public string time { get; set; }
+
+        public string date { get; set; }
     }
 }

@@ -1,0 +1,17 @@
+<div class="main-div">
+    <p>Enter username and password. If the username and password does not exist, a new account will be created</p>
+    <form [formGroup]="loginForm" class="login-form" >
+        
+            
+          <label for="name">User Name:</label>
+          <input id="name" formControlName="name" type="text">
+<br>
+<br>
+        <button type="button" mat-fab extended class="send-button"  (click)="loginUser()">
+            <mat-icon>local_airport</mat-icon>
+            Login/Create User
+        </button>
+    </form>  
+</div>
+
+

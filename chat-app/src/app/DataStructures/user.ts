@@ -1,5 +1,5 @@
 export interface User{
 
-    id : number, name : string,  chats : number[]
+    id : number, name : string,  chats :{[key : number] : string}
 
 }

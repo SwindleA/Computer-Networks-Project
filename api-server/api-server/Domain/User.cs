@@ -15,8 +15,8 @@ namespace api_server.Domain
         public string name { get; set; }
 
 
-        //chats that the user is in
-        public List<int> chats { get; set; }
+        //chats that the user is in, key is the chat id, value is the chat name
+        public Dictionary<int,string> chats { get; set; } = new Dictionary<int, string>();
 
     }
 }
