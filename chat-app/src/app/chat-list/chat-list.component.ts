@@ -21,27 +21,40 @@ export class ChatListComponent {
 
     opened: boolean = false;
 
-    chats : number[] = [];
+    chats : string[] = [];
 
-  
+    user : User = {id : 0,name : "", chats : []};;
 
     constructor(private api : ApiService,private router : Router) { }
 
     async ngOnInit()
     {
         console.log(this.user_id);
-        var user : User = await this.api.getUser(this.user_id);
-        this.chats = user.chats;
+        this.user = await this.api.getUser(this.user_id);
+        for(const key in this.user.chats){
+            console.log(this.user.chats[key])
+            this.chats.push(this.user.chats[key])
+            
+        }
+        
+        
         console.log(this.chats)
         
 
     }
 
-    goToChat(chat : number){
+    goToChat(chatName : string){
 
         console.log("go to chat")
-        console.log(chat)
-       window.location.href = '/'+this.user_id+'/chat_room/'+chat;
+        console.log(chatName)
+console.log(this.user)
+        for (const key in this.user.chats) {
+            console.log(this.user.chats[key])
+            if (this.user.chats[key] === chatName) {
+              window.location.href = '/user/'+this.user_id+'/chat_room/'+key; 
+            }
+          }
+       
     }
 
 

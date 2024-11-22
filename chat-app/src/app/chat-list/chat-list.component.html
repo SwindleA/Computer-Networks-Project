@@ -1,6 +1,10 @@
+
+
+
 <button mat-icon-button class="example-icon" (click)="sidenav.toggle()">
     <mat-icon>menu</mat-icon>
   </button>
+  <h2>Welcome {{user.name}}</h2>
 <mat-sidenav-container class="side-nav-container">
     <mat-sidenav #sidenav mode="side" [(opened)]="opened">
         @for(chat of chats; track chat){

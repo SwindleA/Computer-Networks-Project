@@ -1,4 +1,4 @@
-import { Component,Injectable,ElementRef, ViewChild, OnInit} from '@angular/core';
+import { Component,Injectable,ElementRef, ViewChild, OnInit,HostListener } from '@angular/core';
 import {MatInputModule} from '@angular/material/input';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {FormControl,FormsModule} from '@angular/forms';
@@ -23,7 +23,7 @@ var socketURL = "https://localhost:7244/api/Home/UpdateChat"
 })
 export class ChatRoomComponent {
 
-    displayedColumns: string[] = ['User', 'Message', 'time'];
+    displayedColumns: string[] = ['User', 'Message', 'time','date'];
 
     dataSource =  new MatTableDataSource<Message>();
 
@@ -61,13 +61,17 @@ export class ChatRoomComponent {
         const temp = document.getElementById('chat-input') as HTMLInputElement;
         console.log(temp.value)
 
-        var new_message : Message = {user_id: this.user_id,message : "",time : ""};
+        var new_message : Message = {user_id: this.user_id,message : "",time : "",date:""};
 
         new_message.message = temp.value;
 
         temp.value = "";
 
-        new_message.time = new Date().toISOString();
+        new_message.time = new Date().toLocaleTimeString([], { 
+            hour: '2-digit', 
+            minute: '2-digit' 
+          });
+        new_message.date = new Date().toLocaleDateString();
 
         await this.api.sendMessage(new_message, this.chat);
 
@@ -133,5 +137,7 @@ export class ChatRoomComponent {
                 }
             },0)
     }
+
+    
 
 }

@@ -36,18 +36,11 @@ export class CreateNewChatComponent {
 
         this.checkboxForm = this.formbuilder.group({
             checkboxes: this.formbuilder.array(
-                this.users.map(
-                    (item, index) => {
-                        if(item.id == this.userID){
-                            return true;
-                        }else{
-                            return false;
-                        }
-                    },
-                )), // Creates a FormArray of booleans,
-            name : new FormControl(''),
+              this.users.map((item) => this.formbuilder.control(item.id === this.userID))
+            ),
           });
-
+        
+        this.checkboxForm.addControl('name', this.formbuilder.control(''));
         console.log(this.checkboxForm)
 
     }
@@ -59,9 +52,12 @@ export class CreateNewChatComponent {
       .filter((v: string | null) => v !== null);
       console.log("Selected Options:", selectedOptions);
 
+      const inputElement = document.getElementById('name') as HTMLInputElement;
+      console.log("name: ", inputElement.value)
+
         var newChat : Chat = {
                                 chat_id : 0,
-                                chat_name :  this.checkboxForm.value.name,
+                                chat_name :  inputElement.value,
                                 users_in_chat : selectedOptions,
                                 messages : []};
 
@@ -69,7 +65,7 @@ export class CreateNewChatComponent {
         var chat  : Chat = await this.api.createChat(newChat,this.userID);
 
         var tempID = Number.parseInt(this.route.snapshot.paramMap.get('id')??"0");
-        this.router.navigate(['/'+tempID+'/chat_room/'+chat.chat_id])
+        this.router.navigate(['/user/'+tempID+'/chat_room/'+chat.chat_id])
 
     }
 

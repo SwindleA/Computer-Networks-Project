@@ -1,3 +1,3 @@
 export interface Message {
-    user_id : number, message: string, time : string
+    user_id : number, message: string, time : string,date : string
 }
