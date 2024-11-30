@@ -10,6 +10,29 @@
             </p>
         }
 
+        <mat-accordion>
+            <mat-expansion-panel hideToggle>
+              <mat-expansion-panel-header>
+                <mat-panel-title> Update Members of Chat</mat-panel-title>
+                
+              </mat-expansion-panel-header>
+              <form [formGroup]="checkboxForm" class="create-chat-form" >
+        
+                <div formArrayName="checkboxes">
+                    <label *ngFor="let item of users; let i = index">
+                      <input  type="checkbox" [formControlName]="i" />
+                      {{ item.name }}
+                    </label>
+                  </div>
+            </form>  
+              <button mat-fab extended (click)="updateUsersInChat()">
+            <mat-icon>add_circle</mat-icon>
+            Create new list of users in chat
+        </button>
+            </mat-expansion-panel>
+            
+          </mat-accordion>
+        
     </div>
     
     <div class = "chat-section">

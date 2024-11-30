@@ -1,7 +1,8 @@
 import { Component,Injectable,ElementRef, ViewChild, OnInit,HostListener } from '@angular/core';
+import { NgFor } from '@angular/common';
 import {MatInputModule} from '@angular/material/input';
 import {MatFormFieldModule} from '@angular/material/form-field';
-import {FormControl,FormsModule} from '@angular/forms';
+import {FormBuilder, FormArray, FormGroup,FormsModule,FormControl,ReactiveFormsModule } from '@angular/forms';
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import {MatTableModule} from '@angular/material/table';
@@ -11,13 +12,14 @@ import { Message } from '../DataStructures/message';
 import { User } from '../DataStructures/user';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute } from '@angular/router';
+import {MatExpansionModule} from '@angular/material/expansion';
 
 var socketURL = "https://localhost:7244/api/Home/UpdateChat"
 
 @Component({
   selector: 'app-chat-room',
   standalone: true,
-  imports: [FormsModule, MatFormFieldModule ,MatInputModule,MatButtonModule,MatIconModule,MatTableModule],
+  imports: [FormsModule, MatFormFieldModule ,MatInputModule,MatButtonModule,NgFor,MatExpansionModule,MatIconModule,MatTableModule,ReactiveFormsModule],
   templateUrl: './chat-room.component.html',
   styleUrl: './chat-room.component.css'
 })
@@ -41,8 +43,10 @@ export class ChatRoomComponent {
     chatFormControl  = new FormControl('');
 
     users_in_chat : Map<number,string> = new Map<number,string>();
+    users : User[] = [];
+    checkboxForm: FormGroup = new FormGroup({});
 
-    constructor(private api : ApiService,private route: ActivatedRoute){}
+    constructor(private api : ApiService,private route: ActivatedRoute,private formbuilder: FormBuilder){}
 
 
     async ngOnInit() {
@@ -51,6 +55,19 @@ export class ChatRoomComponent {
         //this.user = await this.api.getUser(tempID);
         
         this.getChat();
+
+        //get list of users
+        this.users = await this.api.getAllUsers();
+
+        //display users in checkbox list
+
+        this.checkboxForm = this.formbuilder.group({
+            checkboxes: this.formbuilder.array(
+              this.users.map((item) => this.formbuilder.control(item.id === this.user_id || this.users_in_chat.has(item.id)))
+            ),
+          });
+        
+        this.checkboxForm.addControl('name', this.formbuilder.control(''));
     
         this.UpdateChat();
 
@@ -124,6 +141,16 @@ export class ChatRoomComponent {
             }
         
         
+    }
+
+    async updateUsersInChat(){
+        const selectedOptions = this.checkboxForm.value.checkboxes
+      .map((checked: boolean, i: number) => checked ? this.users[i]: null)
+      .filter((v: string | null) => v !== null);
+      console.log("Selected Options:", selectedOptions);
+
+      await this.api.updateUsersInChat(this.chat.chat_id, selectedOptions);
+      await this.getChat();
     }
 
 

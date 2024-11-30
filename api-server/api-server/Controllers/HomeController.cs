@@ -346,6 +346,74 @@ namespace api_server.Controllers
             return Ok(newUser);
         }
 
+        //add/remove users in chat
+        [HttpPost("UpdateUsersInChat")]
+        public async Task<IActionResult> UpdateUsersInChat(int chat_id, List<User> users_list)
+        {
+            Console.WriteLine("UpdateUsersInChat");
+
+            Console.WriteLine(users_list);
+            List<Chat> chats = FileWriter.ReadChatsFromFile("./Chats.txt").Result;
+
+            List<User> users = FileWriter.ReadUsersFromFile("./Users.txt").Result;
+
+            if (chats != null)
+            {
+                Chat targetChat = chats.FirstOrDefault(chat => chat.chat_id == chat_id);
+
+                if (targetChat != null)
+                {
+                    List<User> originalUsers = targetChat.users_in_chat;
+
+
+                   
+                    foreach(User user in originalUsers)
+                    {
+                        User existUser = users_list.FirstOrDefault(t_user => t_user.id == user.id);
+
+                        //if the user exists in the original but not the new list, it was removes
+                        if (existUser == null)
+                        {
+                            User targetUser = users.FirstOrDefault(t_user => t_user.id == user.id);
+
+                            targetUser.chats.Remove(targetChat.chat_id);
+                        }
+
+                        
+                    }
+
+                    foreach (User user in users_list)
+                    {
+                        User existUser = originalUsers.FirstOrDefault(t_user => t_user.id == user.id);
+
+                        //if the user exists in the new list but not the old, the user was added. 
+                        if (existUser == null)
+                        {
+                            User targetUser = users.FirstOrDefault(t_user => t_user.id == user.id);
+
+
+                            targetUser.chats.Add(targetChat.chat_id, targetChat.chat_name);
+                        }
+
+
+                    }
+
+                   
+
+                    targetChat.users_in_chat = users_list;
+
+                    await FileWriter.WriteToFile("./Chats.txt", chats);
+                    await FileWriter.WriteToFile("./Users.txt", users);
+
+                    return Ok(targetChat);
+                }
+            }
+
+
+            return StatusCode(500);
+
+        }
+
 
     }
 }

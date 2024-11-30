@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Message } from './DataStructures/message';
 import { Chat } from './DataStructures/chat';
+import { User } from './DataStructures/user';
 
 const url_get_user = "https://localhost:7244/api/Home/GetUser?id="
 const url_get_all_users = "https://localhost:7244/api/Home/GetAllUsers"
@@ -10,6 +11,7 @@ const url_get_chat = "https://localhost:7244/api/Home/GetChat?id="
 const url_create_chat = "https://localhost:7244/api/Home/CreateChat?id="
 const url_get_chats = "https://localhost:7244/api/Home/GetChats?id="
 const url_login_create_user = "https://localhost:7244/api/Home/Login_CreateUser?user_name="
+const url_update_users ="https://localhost:7244/api/Home/UpdateUsersInChat?chat_id="
 
 @Injectable({
   providedIn: 'root'
@@ -146,6 +148,28 @@ export class ApiService {
                 body : pack
             });
 
+            const data = await response.json()
+            console.log(data) 
+            return data;
+        }catch(error){
+            console.log(error);
+        }
+
+    }
+
+    public async updateUsersInChat(chat_id : number, users : User[]){
+        
+
+        var pack : string = JSON.stringify(users)
+
+        console.log(pack)
+        try{
+            const response = await fetch(url_update_users+chat_id,{
+                method : 'POST',
+                mode : 'cors',
+                headers : new Headers({'content-type' :'application/json'}),
+                body : pack
+            })
             const data = await response.json()
             console.log(data) 
             return data;
